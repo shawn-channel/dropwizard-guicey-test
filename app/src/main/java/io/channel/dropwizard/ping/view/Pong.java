@@ -1,4 +1,4 @@
-package io.channel.dropwizard.ping.representation;
+package io.channel.dropwizard.ping.view;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

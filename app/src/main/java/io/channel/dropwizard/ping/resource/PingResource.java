@@ -1,7 +1,6 @@
 package io.channel.dropwizard.ping.resource;
 
-import io.channel.dropwizard.ping.representation.Pong;
-
+import io.channel.dropwizard.ping.view.Pong;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
