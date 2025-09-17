@@ -1,12 +1,14 @@
 package io.channel.dropwizard.ping.view;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class Pong {
-    private static final String fixedPongString = "pong";
+    private final String content;
 
     @JsonProperty
     public String getContent() {
-        return fixedPongString;
+        return content;
     }
 }
