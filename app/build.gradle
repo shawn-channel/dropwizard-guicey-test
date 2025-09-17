@@ -18,14 +18,26 @@ repositories {
 dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation libs.junit.jupiter
+    testImplementation 'io.dropwizard:dropwizard-testing'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    testImplementation 'org.projectlombok:lombok:1.18.40'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.40'
+
 
     // This dependency is used by the application.
     
     implementation libs.guava
     implementation 'io.dropwizard:dropwizard-core:4.0.14'
     implementation 'io.dropwizard:dropwizard-jersey:4.0.14'
+    implementation platform('ru.vyarus.guicey:guicey-bom:7.2.2')
+    implementation 'ru.vyarus:dropwizard-guicey'
+    implementation 'com.google.inject.extensions:guice-assistedinject'
+    implementation 'org.projectlombok:lombok:1.18.40'
+    annotationProcessor 'org.projectlombok:lombok:1.18.40'
+    
+
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

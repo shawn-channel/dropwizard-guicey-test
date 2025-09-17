@@ -4,10 +4,10 @@
 package io.channel.dropwizard;
 
 import io.channel.dropwizard.health.DumbHealthCheck;
-import io.channel.dropwizard.ping.resource.PingResource;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
+import ru.vyarus.dropwizard.guice.GuiceBundle;
 
 public class App extends Application<AppConfig> {
     @Override
@@ -17,12 +17,14 @@ public class App extends Application<AppConfig> {
 
     @Override
     public void initialize(Bootstrap<AppConfig> bootstrap) {
-        // nothing to do yet
+        bootstrap.addBundle(GuiceBundle.builder()
+            .enableAutoConfig("io.channel.dropwizard")
+            .modules(new Module())
+            .build());
     }
 
     @Override
     public void run(AppConfig configuration, Environment environment) {
-        environment.jersey().register(new PingResource());
         environment.healthChecks().register("dumb", new DumbHealthCheck());
     }
 

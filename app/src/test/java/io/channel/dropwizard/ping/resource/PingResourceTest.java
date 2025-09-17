@@ -9,7 +9,7 @@ class PingResourceTest {
 
     @Test
     void getPingShouldReturnPong() {
-        Assertions.assertEquals(Pong.class, new PingResource().getPing().getClass());
+        Assertions.assertEquals(Pong.class, new PingResource("%s").getPing().getClass());
     }
 
 }
