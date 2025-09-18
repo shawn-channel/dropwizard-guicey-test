@@ -5,3 +5,4 @@
 build
 app/build/
 app/bin/
+app/src/main/java/io/channel/.DS_Store

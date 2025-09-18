@@ -13,6 +13,11 @@ public class Module extends DropwizardAwareModule<AppConfig> {
         bind(String.class)
             .annotatedWith(Names.named("STARTUP_TIME"))
             .toInstance(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now()));
+
+        bind(String.class)
+            .annotatedWith(Names.named("OFFICE_CIDR"))
+            .toInstance("192.168.8.0/21");
+            
         configuration();
         environment();
         bootstrap();
