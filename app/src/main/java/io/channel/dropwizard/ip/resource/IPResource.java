@@ -11,7 +11,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
-import jakarta.validation.Valid;;
+import jakarta.validation.Valid;
 
 @Path("/ip")
 @Slf4j
