@@ -1,11 +1,8 @@
 package io.channel.dropwizard.ping.resource;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
+import io.channel.dropwizard.ping.behavior.PingBehavior;
 import io.channel.dropwizard.ping.view.Pong;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -15,17 +12,15 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/ping")
 @Produces(MediaType.APPLICATION_JSON)
 public class PingResource {
-    private final String serverStartedAt;
-    private final String template;
+    private final PingBehavior pingBehavior;
 
     @Inject
-    public PingResource(@PingResponseTemplate String template, @Named("STARTUP_TIME") String serverStartedAt) {
-        this.serverStartedAt = serverStartedAt;
-        this.template = template;
+    public PingResource(PingBehavior pingBehavior) {
+        this.pingBehavior = pingBehavior;
     }
     
     @GET
     public Pong getPing() {
-        return new Pong(String.format(template, serverStartedAt, DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now())));
+        return new Pong(pingBehavior.getPongString("Hi!"));
     }
 }

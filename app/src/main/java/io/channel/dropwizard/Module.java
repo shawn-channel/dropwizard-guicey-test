@@ -3,10 +3,8 @@ package io.channel.dropwizard;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.google.inject.Provides;
 import com.google.inject.name.Names;
 
-import io.channel.dropwizard.ping.resource.PingResponseTemplate;
 import ru.vyarus.dropwizard.guice.module.support.DropwizardAwareModule;
 
 public class Module extends DropwizardAwareModule<AppConfig> {
@@ -18,11 +16,5 @@ public class Module extends DropwizardAwareModule<AppConfig> {
         configuration();
         environment();
         bootstrap();
-    }
-
-    @Provides
-    @PingResponseTemplate
-    public String providePingResponseTemplate() {
-        return "from server started at %s, pong to ping received at %s";
     }
 }
