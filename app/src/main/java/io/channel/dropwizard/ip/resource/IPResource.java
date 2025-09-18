@@ -3,7 +3,7 @@ package io.channel.dropwizard.ip.resource;
 import com.google.inject.Inject;
 
 import io.channel.dropwizard.ip.behavior.IPValidateBehavior;
-import io.channel.dropwizard.ip.model.ValidateRequest;
+import io.channel.dropwizard.ip.model.IPValidateRequest;
 import io.channel.dropwizard.ip.view.IPValidateView;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -26,7 +26,7 @@ public class IPResource {
     @POST
     @Path("/validate")
     @Produces(MediaType.APPLICATION_JSON)
-    public IPValidateView validate(@QueryParam("office") Boolean isOffice, ValidateRequest body) {
+    public IPValidateView validate(@QueryParam("office") Boolean isOffice, IPValidateRequest body) {
         log.info("office: {}, address: {}", isOffice, body.getAddress());
         return new IPValidateView(ipValidateBehavior.validate(isOffice, body.getAddress()));
     }
