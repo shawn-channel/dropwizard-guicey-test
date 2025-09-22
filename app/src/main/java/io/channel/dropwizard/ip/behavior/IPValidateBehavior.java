@@ -5,7 +5,10 @@ import java.util.Set;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import io.channel.dropwizard.ip.util.CIDRMatcher;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.executable.ValidateOnExecution;
+
+import org.apache.commons.net.util.SubnetUtils;
 
 public class IPValidateBehavior {
     private static final String SUCCESS = "SUCCESS";
@@ -19,7 +22,8 @@ public class IPValidateBehavior {
         this.officeCidr = officeCidr;
     }
 
-    public String validate(Boolean isOffice, String ipV4Address) {
+    @ValidateOnExecution // 주석처리다가 풀어가며 변화를 확인하세요!
+    public String validate(@NotNull Boolean isOffice, String ipV4Address) {
         if(isOffice != null && isOffice && isOfficeIp(ipV4Address)) {
             return SUCCESS;
         }
@@ -36,6 +40,7 @@ public class IPValidateBehavior {
     }
 
     private boolean isOfficeIp(String ipV4Address) {
-        return CIDRMatcher.isIpInCidr(ipV4Address, officeCidr);
+        SubnetUtils subnet = new SubnetUtils(officeCidr);
+        return subnet.getInfo().isInRange(ipV4Address);
     }
 }

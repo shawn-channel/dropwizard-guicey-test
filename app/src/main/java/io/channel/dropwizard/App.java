@@ -8,6 +8,8 @@ import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
 import ru.vyarus.dropwizard.guice.GuiceBundle;
+import ru.vyarus.guicey.validation.ValidationBundle;
+import ru.vyarus.guice.validator.aop.DeclaredMethodMatcher;
 
 public class App extends Application<AppConfig> {
     @Override
@@ -20,6 +22,8 @@ public class App extends Application<AppConfig> {
         bootstrap.addBundle(GuiceBundle.builder()
             .enableAutoConfig("io.channel.dropwizard")
             .modules(new Module())
+            .bundles(new ValidationBundle()
+                .validateAnnotatedOnly())
             .build());
     }
 
