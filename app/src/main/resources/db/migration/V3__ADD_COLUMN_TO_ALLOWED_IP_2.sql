@@ -1,0 +1,1 @@
+alter table allowed_ip add column type VARCHAR(20) not null default 'EXACT';

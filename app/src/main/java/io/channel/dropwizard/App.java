@@ -23,7 +23,8 @@ public class App extends Application<AppConfig> {
             .enableAutoConfig("io.channel.dropwizard")
             .modules(new Module())
             .bundles(new ValidationBundle()
-                .validateAnnotatedOnly())
+                .validateAnnotatedOnly()
+                .strictGroupsDeclaration())
             .build());
     }
 

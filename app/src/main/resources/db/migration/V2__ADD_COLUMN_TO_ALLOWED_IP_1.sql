@@ -1,0 +1,1 @@
+alter table allowed_ip add column is_office boolean not null default false;

@@ -1,0 +1,40 @@
+jooq {
+    configurations {
+        main {
+            generationTool {
+                logging = 'WARN'
+                
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = System.getenv('DATABASE_URL') ?: 'jdbc:postgresql://localhost:5432/sample'
+                    user = System.getenv('DATABASE_USER') ?: 'local_user'
+                    password = System.getenv('DATABASE_PASSWORD') ?: 'local_pw'
+                }
+                
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema = 'public'
+                        excludes = 'flyway_schema_history'  // Flyway 테이블 제외 추가
+
+                        includeForeignKeys = false
+                        includeUniqueKeys = false
+                        includeIndexes = false
+                        includePrimaryKeys = true 
+                    }
+                    
+                    target {
+                        packageName = 'io.channel.dropwizard.jooq'
+                        directory = 'src/generated/java'  // ✅ Relative to app module
+                    }
+
+                    generate {
+                        relations = false
+                    }
+                }
+            }
+        }
+    }
+}

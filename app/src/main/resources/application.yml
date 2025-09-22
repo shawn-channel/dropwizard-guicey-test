@@ -1,0 +1,15 @@
+database:
+  driverClass: org.postgresql.Driver
+  user: ${DATABASE_USER:-local_user}
+  password: ${DATABASE_PASSWORD:-local_pw}
+  url: ${DATABASE_URL:-jdbc:postgresql://localhost:5432/sample}
+  
+  # Connection pool settings
+  maxWaitForConnection: 1s
+  validationQuery: "SELECT 1"
+  validationQueryTimeout: 3s
+  minSize: 8
+  maxSize: 32
+  checkConnectionWhileIdle: false
+  evictionInterval: 10s
+  minIdleTime: 1 minute

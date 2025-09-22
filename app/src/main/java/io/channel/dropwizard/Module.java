@@ -22,4 +22,23 @@ public class Module extends DropwizardAwareModule<AppConfig> {
         environment();
         bootstrap();
     }
+
+    @Provides
+    @Singleton
+    public DataSource dataSource() {
+        // Get the database configuration from AppConfig
+        DataSourceFactory dataSourceFactory = configuration().getDataSourceFactory();
+        
+        // Build the managed data source
+        return dataSourceFactory.build(environment().metrics(), "postgresql");
+    }
+
+    @Provides
+    @Singleton 
+    public DSLContext dslContext(DataSource dataSource) {
+        Configuration configuration = new DefaultConfiguration()
+            .set(dataSource)
+            .set(SQLDialect.POSTGRES);
+        return DSL.using(configuration);
+    }
 }

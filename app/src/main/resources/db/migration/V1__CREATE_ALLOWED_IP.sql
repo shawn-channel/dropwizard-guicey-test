@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS allowed_ip;
+
+CREATE TABLE allowed_ip (
+  id SERIAL PRIMARY KEY NOT NULL,
+  value VARCHAR(50) NOT NULL
+);

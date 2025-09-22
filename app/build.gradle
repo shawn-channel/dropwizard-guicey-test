@@ -4,10 +4,19 @@
  * This generated file contains a sample Java application project to get you started.
  * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/8.5/userguide/building_java_projects.html in the Gradle documentation.
  */
+buildscript {
+    dependencies {
+        classpath 'org.flywaydb:flyway-database-postgresql:11.13.1'
+    }
+}
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+
+    // flyway
+    id 'org.flywaydb.flyway' version '11.13.0'
+    id 'nu.studer.jooq' version '9.0'
 }
 
 repositories {
@@ -31,6 +40,8 @@ dependencies {
     implementation libs.guava
     implementation 'io.dropwizard:dropwizard-core:4.0.14'
     implementation 'io.dropwizard:dropwizard-jersey:4.0.14'
+    implementation 'io.dropwizard:dropwizard-db:4.0.14'
+    implementation 'io.dropwizard:dropwizard-jdbi3:4.0.14'
     implementation platform('ru.vyarus.guicey:guicey-bom:7.2.2')
     implementation 'ru.vyarus.guicey:guicey-validation'
     implementation 'ru.vyarus:dropwizard-guicey'
@@ -38,6 +49,15 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.40'
     annotationProcessor 'org.projectlombok:lombok:1.18.40'
     implementation 'commons-net:commons-net:3.12.0'
+    implementation 'org.flywaydb:flyway-core:11.13.0'
+    implementation 'org.postgresql:postgresql:42.7.7'
+    implementation 'org.flywaydb:flyway-database-postgresql:11.13.1'
+    runtimeOnly 'org.flywaydb:flyway-gradle-plugin:11.13.1'
+    implementation 'org.jooq:jooq:3.17.35'
+    implementation 'org.jooq:jooq-meta:3.17.35'
+    implementation 'org.jooq:jooq-codegen:3.17.35'
+    jooqGenerator 'org.jooq:jooq-meta-extensions:3.17.35'
+    jooqGenerator 'org.postgresql:postgresql:42.7.7'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -56,3 +76,38 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+flyway {
+    // PostgreSQL 연결 설정
+    url = System.getenv('DATABASE_URL') ?: 'jdbc:postgresql://localhost:5432/sample'
+    user = System.getenv('DATABASE_USER') ?: 'local_user'
+    password = System.getenv('DATABASE_PASSWORD') ?: 'local_pw'
+    
+    // 마이그레이션 파일 위치
+    locations = ['filesystem:src/main/resources/db/migration']
+    
+    // 스키마 설정 (필요한 경우)
+    schemas = ['public']
+    
+    // Flyway 옵션들
+    baselineOnMigrate = true
+    validateOnMigrate = true
+    cleanDisabled = true  // production에서는 반드시 true로 설정
+
+    // PostgreSQL 특화 설정
+    placeholderReplacement = false
+}
+
+apply from: 'jooq.gradle'
+
+// Configure generated source directory
+sourceSets {
+    main {
+        java {
+            srcDirs += 'src/generated/java'  // Include generated jOOQ sources (relative to app module)
+        }
+    }
+}
+
+generateJooq.dependsOn flywayMigrate
+compileJava.dependsOn generateJooq

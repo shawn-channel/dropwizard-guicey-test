@@ -12,6 +12,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.validation.Valid;
+import jakarta.validation.executable.ValidateOnExecution;
 
 @Path("/ip")
 @Slf4j
@@ -23,6 +24,7 @@ public class IPResource {
         this.ipValidateBehavior = ipValidateBehavior;
     }
 
+    // @ValidateOnExecution
     @RequiresIPValidation
     @POST
     @Path("/validate")
