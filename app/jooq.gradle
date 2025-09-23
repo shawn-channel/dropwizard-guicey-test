@@ -12,7 +12,7 @@ jooq {
                 }
                 
                 generator {
-                    name = 'org.jooq.codegen.DefaultGenerator'
+                    name = 'org.jooq.codegen.JavaGenerator'
                     
                     database {
                         name = 'org.jooq.meta.postgres.PostgresDatabase'
@@ -23,6 +23,16 @@ jooq {
                         includeUniqueKeys = false
                         includeIndexes = false
                         includePrimaryKeys = true 
+                        
+                        // Custom type mapping for JSONB to UserContent using Converter
+                        forcedTypes {
+                            forcedType {
+                                userType = 'io.channel.dropwizard.user.model.UserContent'
+                                converter = 'io.channel.dropwizard.user.converter.JsonToUserContentConverter'
+                                genericConverter = false
+                                includeExpression = ".*\\.content"
+                            }
+                        }
                     }
                     
                     target {

@@ -9,12 +9,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.executable.ValidateOnExecution;
 
 import org.apache.commons.net.util.SubnetUtils;
-import io.channel.dropwizard.ip.util.CIDRMatcher;
 import io.channel.dropwizard.jooq.tables.records.AllowedIpRecord;
 import org.jooq.DSLContext;
+import lombok.extern.slf4j.Slf4j;
+
+import static org.jooq.impl.DSL.condition;
 
 import static io.channel.dropwizard.jooq.Tables.ALLOWED_IP;
 
+@Slf4j
 public class IPValidateBehavior {
     private static final String SUCCESS = "SUCCESS";
     private static final String FAIL = "FAIL";
@@ -33,15 +36,15 @@ public class IPValidateBehavior {
         this.dsl = dsl;
     }
 
-    @ValidateOnExecution // 주석처리다가 풀어가며 변화를 확인하세요!
+    @ValidateOnExecution // 주석처리 했다가 풀어가며 변화를 확인하세요!
     public String validate(@NotNull Boolean isOffice, String ipV4Address) {
         // 1. Check office CIDR (existing logic - for backward compatibility)
-        if (isOffice != null && isOffice && isOfficeIp(ipV4Address)) {
+        if (isOffice != null && isOffice && isIpInCidr(ipV4Address, officeCidr)) {
             return SUCCESS;
         }
 
         // 2. Check localhost (existing logic)
-        if (LOCALHOST.equals(ipV4Address) && isOfficeIp(ipV4Address)) {
+        if (LOCALHOST.equals(ipV4Address) && isIpInCidr(ipV4Address, officeCidr)) {
             return SUCCESS;
         }
 
@@ -53,11 +56,6 @@ public class IPValidateBehavior {
         return FAIL;
     }
 
-    private boolean isOfficeIp(String ipV4Address) {
-        SubnetUtils subnet = new SubnetUtils(officeCidr);
-        return subnet.getInfo().isInRange(ipV4Address);
-    }
-    
     private boolean isAllowedByDatabase(String ipV4Address, Boolean isOffice) {
         try {
             // Query allowed IPs from database
@@ -66,7 +64,7 @@ public class IPValidateBehavior {
             
             if (isOffice != null) {
                 allowedIps = dsl.selectFrom(ALLOWED_IP)
-                    .where(ALLOWED_IP.IS_OFFICE.eq(isOffice))
+                    .where(isOffice ? condition(ALLOWED_IP.IS_OFFICE) : condition(ALLOWED_IP.IS_OFFICE).not())
                     .fetch();
             } else {
                 // Check both office and non-office IPs
@@ -84,9 +82,8 @@ public class IPValidateBehavior {
             return false;
             
         } catch (Exception e) {
-            // Log the database error (you might want to add a logger)
-            // In case of database failure, fall back to FAIL for security
-            System.err.println("Database error during IP validation: " + e.getMessage());
+            // Log the database error and fall back to FAIL for security
+            log.error("Database error during IP validation: {}", e.getMessage(), e);
             return false;
         }
     }
@@ -100,14 +97,24 @@ public class IPValidateBehavior {
             return allowedValue.equals(ipV4Address);
         } else if (TYPE_CIDR.equals(type)) {
             // CIDR range match
-            return CIDRMatcher.isIpInCidr(ipV4Address, allowedValue);
+            return isIpInCidr(ipV4Address, allowedValue);
         } else {
             // Auto-detect: if value contains '/', treat as CIDR; otherwise exact match
             if (allowedValue.contains("/")) {
-                return CIDRMatcher.isIpInCidr(ipV4Address, allowedValue);
+                return isIpInCidr(ipV4Address, allowedValue);
             } else {
                 return allowedValue.equals(ipV4Address);
             }
+        }
+    }
+    
+    private boolean isIpInCidr(String ipV4Address, String cidr) {
+        try {
+            SubnetUtils subnet = new SubnetUtils(cidr);
+            return subnet.getInfo().isInRange(ipV4Address);
+        } catch (Exception e) {
+            // Invalid CIDR format or IP address
+            return false;
         }
     }
 }

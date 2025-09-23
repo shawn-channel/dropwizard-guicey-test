@@ -53,10 +53,11 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.7.7'
     implementation 'org.flywaydb:flyway-database-postgresql:11.13.1'
     runtimeOnly 'org.flywaydb:flyway-gradle-plugin:11.13.1'
-    implementation 'org.jooq:jooq:3.17.35'
-    implementation 'org.jooq:jooq-meta:3.17.35'
-    implementation 'org.jooq:jooq-codegen:3.17.35'
-    jooqGenerator 'org.jooq:jooq-meta-extensions:3.17.35'
+    implementation 'org.jooq:jooq:3.19.1'
+    implementation 'org.jooq:jooq-meta:3.19.1'
+    implementation 'org.jooq:jooq-codegen:3.19.1'
+    jooqGenerator 'org.jooq:jooq-meta-extensions:3.19.1'
+    jooqGenerator 'org.jooq:jooq-jackson-extensions:3.19.1'
     jooqGenerator 'org.postgresql:postgresql:42.7.7'
 }
 

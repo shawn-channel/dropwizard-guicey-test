@@ -1,8 +1,10 @@
+# Database configuration
+# Override with environment variables: DW_DATABASE_USER, DW_DATABASE_PASSWORD, DW_DATABASE_URL
 database:
   driverClass: org.postgresql.Driver
-  user: ${DATABASE_USER:-local_user}
-  password: ${DATABASE_PASSWORD:-local_pw}
-  url: ${DATABASE_URL:-jdbc:postgresql://localhost:5432/sample}
+  user: local_user
+  password: local_pw
+  url: jdbc:postgresql://localhost:5432/sample
   
   # Connection pool settings
   maxWaitForConnection: 1s
@@ -13,3 +15,28 @@ database:
   checkConnectionWhileIdle: false
   evictionInterval: 10s
   minIdleTime: 1 minute
+
+# Logging configuration
+logging:
+  level: INFO
+  
+  # Enable SQL logging
+  loggers:
+    # jOOQ SQL execution logging
+    "org.jooq.tools.LoggerListener": DEBUG
+    
+    # jOOQ general logging (optional - shows more details)
+    "org.jooq": DEBUG
+    
+    # Database connection pool logging (optional)
+    "org.apache.tomcat.jdbc.pool": INFO
+    
+    # Our application logging
+    "io.channel.dropwizard": DEBUG
+
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: UTC
+      target: stdout
+      logFormat: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
