@@ -11,7 +11,7 @@ import com.google.inject.name.Names;
 
 import io.dropwizard.db.DataSourceFactory;
 import io.channel.dropwizard.user.behavior.UserBehavior;
-import io.channel.dropwizard.user.repository.MemberRepository;
+import io.channel.dropwizard.user.dao.MemberDao;
 import io.channel.dropwizard.user.resource.UserResource;
 
 import org.jooq.Configuration;
@@ -35,7 +35,7 @@ public class Module extends DropwizardAwareModule<AppConfig> {
             .toInstance("192.168.8.0/21");
             
         // User module components for JOOQ custom type mapping example
-        bind(MemberRepository.class);
+        bind(MemberDao.class);
         bind(UserBehavior.class);
         bind(UserResource.class);
             
@@ -55,7 +55,6 @@ public class Module extends DropwizardAwareModule<AppConfig> {
     }
 
     @Provides
-    @Singleton 
     public DSLContext dslContext(DataSource dataSource) {
         Configuration configuration = new DefaultConfiguration()
             .set(dataSource)

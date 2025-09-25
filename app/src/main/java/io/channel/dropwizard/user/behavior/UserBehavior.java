@@ -1,7 +1,7 @@
 package io.channel.dropwizard.user.behavior;
 
+import io.channel.dropwizard.user.dao.MemberDao;
 import io.channel.dropwizard.user.model.UserContent;
-import io.channel.dropwizard.user.repository.MemberRepository;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -14,11 +14,11 @@ import java.util.Optional;
 @Singleton
 public class UserBehavior {
     
-    private final MemberRepository memberRepository;
+    private final MemberDao memberDao;
     
     @Inject
-    public UserBehavior(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
+    public UserBehavior(MemberDao memberDao) {
+        this.memberDao = memberDao;
     }
     
     /**
@@ -32,6 +32,6 @@ public class UserBehavior {
             return Optional.empty();
         }
         
-        return memberRepository.findContentByUserId(userId.trim());
+        return memberDao.findContentByUserId(userId.trim());
     }
 }

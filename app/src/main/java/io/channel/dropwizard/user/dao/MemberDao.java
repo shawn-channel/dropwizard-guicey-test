@@ -1,4 +1,4 @@
-package io.channel.dropwizard.user.repository;
+package io.channel.dropwizard.user.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,12 +19,12 @@ import static io.channel.dropwizard.jooq.tables.Member.MEMBER;
  * Example demonstrating PostgreSQL JSONB to UserContent mapping
  */
 @Singleton
-public class MemberRepository {
+public class MemberDao {
     
     private final DSLContext dsl;
     
     @Inject
-    public MemberRepository(DSLContext dsl) {
+    public MemberDao(DSLContext dsl) {
         this.dsl = dsl;
     }
     
